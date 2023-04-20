@@ -58,15 +58,15 @@ public:
     LOREM__EXPORT std::string full_name () const;
 
     /**
-     * Genarates composition of the random person credentials according to
-     * format string @a fm.
+     * Genarates composition of the random or specifed by index person
+     * credentials according to format string @a fm.
      *
      * @param fm Is the format sequence that consist of specificators '%l',
      *       '%f', '%m' and '%%' letters and any characters. E.g. '%l %f %m'
      *       will force to output last name, then first and middle names,
      *       '%f %l' will force to output first name and then last one.
      */
-    LOREM__EXPORT std::string format (std::string const & fm) const;
+    LOREM__EXPORT std::string format (int index, std::string const & fm) const;
 };
 
 } // namespace lorem

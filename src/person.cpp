@@ -57,25 +57,22 @@ std::string person::full_name () const
     return _d->full_name();
 }
 
-std::string person::format (std::string const & fm) const
+std::string person::format (int index, std::string const & fm) const
 {
     std::string result;
-
-    auto m = middle_name(-1);
-    auto l = last_name(-1);
     auto spec_char = false;
 
     for (char ch: fm) {
         if (spec_char) {
             switch (ch) {
                 case 'f':
-                    result += first_name(-1);
+                    result += first_name(index);
                     break;
                 case 'l':
-                    result += last_name(-1);
+                    result += last_name(index);
                     break;
                 case 'm':
-                    result += middle_name(-1);
+                    result += middle_name(index);
                     break;
                 case '%':
                     result += '%';
@@ -88,6 +85,8 @@ std::string person::format (std::string const & fm) const
         } else {
             if (ch == '%')
                 spec_char = true;
+            else
+                result += ch;
         }
     }
 
