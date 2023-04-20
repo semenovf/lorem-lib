@@ -26,6 +26,12 @@ LOREM__EXPORT unsigned int unsigned_integer (unsigned int from, unsigned int to)
 LOREM__EXPORT unsigned int index (unsigned int size);
 
 /**
+ * Returns random index value if @a requested_index less than zero or
+ * @a requested_index modulo @a collection_size.
+ */
+LOREM__EXPORT unsigned int index (unsigned int size, int requested_index);
+
+/**
  * Returns random boolean value.
  */
 LOREM__EXPORT bool boolean ();

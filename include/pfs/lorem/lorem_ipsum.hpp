@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "exports.hpp"
-#include <stdexcept>
+#include <cstdio>
 #include <string>
 #include <vector>
 
@@ -67,6 +67,11 @@ public:
      * Returns generated paragraphs.
      */
     std::vector<paragraph_t> operator () () const;
+
+    /**
+     * Print paragraphs into specified stream.
+     */
+    void print (FILE * out = stdout) const;
 };
 
 } // namespace lorem

@@ -29,7 +29,7 @@ int integer (int from, int to)
     if (from == to)
         return from;
 
-    std::uniform_int_distribution<int> distrib{from, to + 1};
+    std::uniform_int_distribution<int> distrib{from, to};
     auto rnd = engine();
     return distrib(rnd);
 }
@@ -39,7 +39,7 @@ unsigned int unsigned_integer (unsigned int from, unsigned int to)
     if (from == to)
         return from;
 
-    std::uniform_int_distribution<unsigned int> distrib{from, to + 1};
+    std::uniform_int_distribution<unsigned int> distrib{from, to};
     auto rnd = engine();
     return distrib(rnd);
 }
@@ -52,6 +52,16 @@ unsigned int index (unsigned int size)
     std::uniform_int_distribution<unsigned int> distrib{0, size - 1};
     auto rnd = engine();
     return distrib(rnd);
+}
+
+unsigned int index (unsigned int size, int requested_index)
+{
+    if (size == 0)
+        throw std::system_error(std::make_error_code(std::errc::invalid_argument));
+
+    return (requested_index >= 0)
+        ? requested_index % size
+        : unsigned_integer(0, size - 1);
 }
 
 bool boolean ()

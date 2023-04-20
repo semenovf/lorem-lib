@@ -9,6 +9,7 @@
 #include "pfs/lorem/lorem_ipsum.hpp"
 #include "pfs/lorem/utils.hpp"
 #include "pfs/assert.hpp"
+#include "pfs/fmt.hpp"
 #include <array>
 #include <string>
 #include <system_error>
@@ -132,37 +133,55 @@ lorem_ipsum::operator () () const
     PFS__TERMINATE(sc > 0, "");
 
     if (_opts.begin_with_orig_paragraph) {
-        if (sc--) {
+        if (sc-- > 0) {
+            pc--;
             paras.emplace_back();
             paras[0].push_back(__orig_para[0]);
         }
 
-        if (sc--)
+        if (sc-- > 0)
             paras[0].push_back(__orig_para[1]);
 
-        if (sc--)
+        if (sc-- > 0)
             paras[0].push_back(__orig_para[2]);
 
-        while (sc--) {
+        while (sc-- > 0) {
             auto wc = unsigned_integer(_opts.word_range.first, _opts.word_range.second);
             paras[0].push_back(generate_sentence(wc));
         }
     }
 
-    while (pc--) {
+    while (pc-- > 0) {
         paras.emplace_back();
         auto & para = paras.back();
 
         sc = unsigned_integer(_opts.sentence_range.first
             , _opts.sentence_range.second);
 
-        while (sc--) {
+        while (sc-- > 0) {
             auto wc = unsigned_integer(_opts.word_range.first, _opts.word_range.second);
             para.push_back(generate_sentence(wc));
         }
     }
 
     return paras;
+}
+
+void lorem_ipsum::print (FILE * out) const
+{
+    auto paras = (*this)();
+    char const * para_delim = "";
+
+    for (auto const & para: paras) {
+        fmt::print(out, para_delim);
+
+        for (auto const & sentence: para) {
+            fmt::print(out, sentence);
+            fmt::print(out, "\n");
+        }
+
+        para_delim = "\n";
+    }
 }
 
 } // namespace lorem

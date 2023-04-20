@@ -4,3 +4,6 @@
 [submodule "3rdparty/pfs/common"]
 	path = 3rdparty/pfs/common
 	url = git@github.com:semenovf/common-lib.git
+[submodule "3rdparty/docopt"]
+	path = 3rdparty/docopt
+	url = https://github.com/docopt/docopt.cpp.git

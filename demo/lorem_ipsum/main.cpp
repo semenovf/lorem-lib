@@ -10,129 +10,235 @@
 #include "pfs/log.hpp"
 #include "pfs/string_view.hpp"
 #include "pfs/integer.hpp"
+#include "pfs/lorem/lang_domain.hpp"
 #include "pfs/lorem/lorem_ipsum.hpp"
+#include "pfs/lorem/person.hpp"
 #include "pfs/lorem/utils.hpp"
-// #include "pfs/string_view.hpp"
-// #include "pfs/netty/startup.hpp"
-// #include <algorithm>
-// #include <map>
+#include "docopt.h"
+#include <stdexcept>
 #include <string>
-// #include <vector>
-// #include <cstdlib>
-//
-static char const * TAG = "LOREM";
 
-// #include "types.hpp"
-// #include "client_routine.hpp"
-// #include "server_routine.hpp"
+//#include <iostream>
+
+static char const * TAG = "LOREM";
 
 static struct program_context {
     std::string program;
 } __pctx;
 
-static void print_usage ()
+std::string const USAGE =
+R"(Usage:
+    lorem_ipsum ipsum [--para-count=<pc> | -P <pc>]
+        [--sentence-count=<sc> | -S <sc> ]
+        [--word-count=<wc> | -W <wc>] [-O]
+    lorem_ipsum person [--lang-domain=<ld> | -D <ld>] [--gender=<gender> | -G <gender>]
+        [--count=NUMBER] [--format=FORMAT | --full-name=TYPE]
+    lorem_ipsum (-h | --help)
+
+Options:
+    -h --help
+        Show this screen.
+
+IPSUM options:
+
+    --para-count=<para-count> | -P <para-count>
+        Number of paragraphs.
+
+    --sentence-count=NUMBER
+        Number of sentences in a paragraph.
+
+    --word-count=NUMBER
+        Number of words in a sentence.
+
+    -O
+        Begin with original Lorem ipsum paragraph.
+
+PERSON options:
+
+    --lang-domain=<ld> | -D <ld>
+        Language domain (ru_RU, en_US, etc).
+
+    --gender=<gender> | -G <gender>
+        Gender ('m' - fo male, 'f' - for female).
+
+    --count=NUMBER
+        Number of person names to output.
+
+    --format=FORMAT
+        Format to output person name. Use '%l', '%f', '%m' specificators to
+        replace them with last, first and middle names respectively in the
+        resulting output. Use '%%' to output letter '%'.
+
+    --full-name=TYPE
+        Output full name according to the language domain traits with last name
+        at the beginning (TYPE='last'), or first name at the beginning
+        (TYPE='first').
+)";
+
+void ipsum_action (docopt::Options const & args)
 {
-    fmt::print(stdout, "Usage\n\t{} [OPTIONS]\n"
-        , __pctx.program);
-    fmt::print(stdout, "Options:\n");
-    fmt::print(stdout, "\t\t--para-count=NUMBER\n");
-    fmt::print(stdout, "\t\t--sentence-count=NUMBER\n");
-    fmt::print(stdout, "\t\t--word-count=NUMBER\n");
+    lorem::lorem_ipsum ipsum;
+
+    try {
+        if (args.at("-P").asBool())
+            ipsum.set_paragraph_count(static_cast<unsigned int>(args.at("<pc>").asLong()));
+
+        if (args.at("--para-count"))
+            ipsum.set_paragraph_count(static_cast<unsigned int>(args.at("--para-count").asLong()));
+
+        if (args.at("-S").asBool())
+            ipsum.set_sentence_count(static_cast<unsigned int>(args.at("<sc>").asLong()));
+
+        if (args.at("--sentence-count"))
+            ipsum.set_sentence_count(static_cast<unsigned int>(args.at("--sentence-count").asLong()));
+
+        if (args.at("-W").asBool())
+            ipsum.set_word_count(static_cast<unsigned int>(args.at("<wc>").asLong()));
+
+        if (args.at("--word-count"))
+            ipsum.set_word_count(static_cast<unsigned int>(args.at("--word-count").asLong()));
+
+        if (args.at("-O").asBool())
+            ipsum.begin_with_orig_paragraph(true);
+
+    } catch (std::runtime_error const & ex) {
+        LOGEXP(TAG, ex);
+        return;
+    } catch (std::invalid_argument const & /*ex*/) {
+        LOGE(TAG, "invalid argument: {}");
+        return;
+    }
+
+    ipsum.print();
 }
 
-// template <typename Iter>
-// static std::string concat (Iter first, Iter last, std::string const & separator)
-// {
-//     std::string result;
-//
-//     if (first != last) {
-//         result += *first;
-//         ++first;
+void person_action (docopt::Options const & args)
+{
+    pfs::optional<lorem::lang_domain> ld {lorem::lang_domain::en_US};
+    auto gender = lorem::gender::male;
+    int count = 1;
+    std::string full_name;
+    std::string format;
+
+//     for (auto a: args) {
+//         std::cout << a.first << ": " << a.second << "\n";
 //     }
-//
-//     for (; first != last; ++first) {
-//         result += separator;
-//         result += *first;
-//     }
-//
-//     return result;
-// }
+
+    try {
+        std::string optname = "-D";
+
+        if (args.at(optname).asBool()) {
+            ld = lorem::lang_domain_from_string(args.at("<ld>").asString());
+
+            if (!ld)
+                throw std::invalid_argument{"-D"};
+        }
+
+        optname = "--lang-domain";
+
+        if (args.at(optname)) {
+            ld = lorem::lang_domain_from_string(args.at(optname).asString());
+
+            if (!ld)
+                throw std::invalid_argument{optname};
+        }
+
+        std::string gender_str = "m";
+
+        if (args.at("-G").asBool())
+            gender_str = args.at("<gender>").asString();
+
+        optname = "--gender";
+
+        if (args.at(optname))
+            gender_str = args.at(optname).asString();
+
+        if (gender_str == "m") {
+            gender = lorem::gender::male;
+        } else if (gender_str == "f") {
+            gender = lorem::gender::female;
+        } else {
+            throw std::invalid_argument{"--gender or -G"};
+        }
+
+        optname = "--count";
+
+        if (args.at(optname)) {
+            count = static_cast<int>(args.at(optname).asLong());
+
+            if (count < 0) {
+                throw std::invalid_argument{optname};
+            }
+        }
+
+        optname = "--format";
+
+        if (args.at(optname))
+            format = args.at(optname).asString();
+
+        optname = "--full-name";
+
+        if (args.at(optname)) {
+            full_name = args.at(optname).asString();
+
+            if (!(full_name == "last" || full_name == "first"))
+                throw std::invalid_argument{optname};
+        }
+
+    } catch (std::runtime_error const & ex) {
+        LOGEXP(TAG, ex);
+        return;
+    } catch (std::invalid_argument const & ex) {
+        LOGE(TAG, "invalid argument: {}", ex.what());
+        return;
+    }
+
+    lorem::person person {*ld, gender};
+
+    while (count-- > 0) {
+        if (!format.empty()) {
+            fmt::print("{}\n", person.format(format));
+        } else {
+            if ((!full_name.empty())) {
+                if (full_name == "last")
+                    fmt::print("{}\n", person.full_name(true));
+                else
+                    fmt::print("{}\n", person.full_name(false));
+            } else {
+                fmt::print("{}\n", person.full_name());
+            }
+        }
+    }
+}
 
 int main (int argc, char * argv[])
 {
     __pctx.program = argv[0];
 
-    bool capitalize = false;
-    lorem::lorem_ipsum ipsum;
+    bool stopOnHelp    = true;  // end early if '-h' or '--help' is in the argv
+    bool stopOnVersion = true;  // end early if '--version' is in the argv
+    bool optionsFirst  = false; // args and options can be arbitrarily mixed
 
-    if (argc == 1) {
-        print_usage();
+    docopt::Options args;
+
+    try {
+        args = docopt::docopt_parse(USAGE
+            , { argv + 1, argv + argc }, stopOnHelp, stopOnVersion, optionsFirst);
+    } catch (docopt::DocoptExitHelp const &) {
+        fmt::print(USAGE);
         return EXIT_SUCCESS;
+    } catch (docopt::DocoptLanguageError const & error) {
+        LOGE(TAG, "Docopt usage string could not be parsed: {}\n", error.what());
+        return EXIT_FAILURE;
+    } catch (docopt::DocoptArgumentError const & error) {
+        LOGE(TAG, "Argument error: {}\n", error.what());
+        return EXIT_FAILURE;
     }
 
-    for (int i = 1; i < argc; i++) {
-        if (pfs::string_view{"-h"} == argv[i] || pfs::string_view{"--help"} == argv[i]) {
-            print_usage();
-            return EXIT_SUCCESS;
-        } else if (pfs::starts_with(pfs::string_view{argv[i]}, "--para-count=")) {
-            auto str = std::string{argv[i] + 13};
-            std::error_code ec;
-            auto pc = pfs::to_integer<unsigned int>(str.cbegin(), str.cend(), ec);
-
-            if (ec) {
-                LOGE(TAG, "Bad value for `--para-count`");
-                return EXIT_FAILURE;
-            }
-
-            ipsum.set_paragraph_count(pc);
-        } else if (pfs::starts_with(pfs::string_view{argv[i]}, "--sentence-count=")) {
-            auto str = std::string{argv[i] + 17};
-            std::error_code ec;
-            auto sc = pfs::to_integer<unsigned int>(str.cbegin(), str.cend(), ec);
-
-            if (ec) {
-                LOGE(TAG, "Bad value for `--sentence-count`");
-                return EXIT_FAILURE;
-            }
-
-            ipsum.set_sentence_count(sc);
-        } else if (pfs::starts_with(pfs::string_view{argv[i]}, "--word-count=")) {
-            auto str = std::string{argv[i] + 13};
-            std::error_code ec;
-            auto wc = pfs::to_integer<unsigned int>(str.cbegin(), str.cend(), ec);
-
-            if (ec) {
-                LOGE(TAG, "Bad value for `--word-count`");
-                return EXIT_FAILURE;
-            }
-
-            ipsum.set_word_count(wc);
-        } else {
-            auto arglen = std::strlen(argv[i]);
-
-            if (arglen > 0 && argv[i][0] == '-') {
-                LOGE(TAG, "Bad option: {}", argv[i]);
-                return EXIT_FAILURE;
-            }
-
-            if (capitalize) {
-                fmt::print("{}\n", lorem::capitalize(std::string{argv[i]}));
-            }
-        }
-    }
-
-    auto paras = ipsum();
-    char const * para_delim = "";
-
-    for (auto const & para: paras) {
-        fmt::print(para_delim);
-
-        for (auto const & sentence: para) {
-            fmt::print(sentence);
-            fmt::print("\n");
-        }
-
-        para_delim = "\n";
+    if (args.at("ipsum").asBool()) {
+        ipsum_action(args);
+    } else if (args.at("person").asBool()) {
+        person_action(args);
     }
 
     return EXIT_SUCCESS;

@@ -16,7 +16,11 @@ endif()
 
 portable_target(ADD_SHARED ${PROJECT_NAME} ALIAS pfs::lorem EXPORTS LOREM__EXPORTS)
 portable_target(SOURCES ${PROJECT_NAME}
+    ${CMAKE_CURRENT_LIST_DIR}/src/lang_domain.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/lorem_ipsum.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/src/utils.cpp)
+    ${CMAKE_CURRENT_LIST_DIR}/src/person.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/utils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/lang_domains/en_US/person.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/src/lang_domains/ru_RU/person.cpp)
 portable_target(INCLUDE_DIRS ${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
 portable_target(LINK ${PROJECT_NAME} PUBLIC pfs::common)
