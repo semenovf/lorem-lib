@@ -87,14 +87,14 @@ std::string greek_letter ()
 
 std::string capitalize (std::string const & word)
 {
-    using utf8_input_iterator = pfs::unicode::utf8_input_iterator<std::string::const_iterator>;
+    using utf8_iterator = pfs::unicode::utf8_iterator<std::string::const_iterator>;
 
     if (word.empty())
         return word;
 
     std::string result;
     pfs::unicode::utf8_output_iterator<std::back_insert_iterator<std::string>> out(std::back_inserter(result));
-    auto it = utf8_input_iterator::begin(word.cbegin(), word.cend());
+    auto it = utf8_iterator::begin(word.cbegin(), word.cend());
 
     // Output first capitalized character
     *out++ = pfs::unicode::to_upper(*it);
