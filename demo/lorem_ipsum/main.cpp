@@ -197,7 +197,7 @@ void person_action (docopt::Options const & args)
 
     while (count-- > 0) {
         if (!format.empty()) {
-            fmt::print("{}\n", person.format(format));
+            fmt::print("{}\n", person.format(-1, format));
         } else {
             if ((!full_name.empty())) {
                 if (full_name == "last")
