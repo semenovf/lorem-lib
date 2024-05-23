@@ -8,9 +8,12 @@
 ################################################################################
 project(lorem_ipsum)
 
-add_subdirectory(${CMAKE_SOURCE_DIR}/3rdparty/docopt
-    ${PROJECT_BINARY_DIR}/docopt
-    EXCLUDE_FROM_ALL)
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE pfs::lorem docopt)
+
+if (TARGET pfs::lorem)
+    target_link_libraries(${PROJECT_NAME} PRIVATE pfs::lorem)
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE pfs::lorem::static)
+endif()
+
 
