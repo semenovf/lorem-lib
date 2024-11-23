@@ -91,39 +91,37 @@ int ipsum_action (CommandLineIterator commandLineIterator)
 {
     lorem::lorem_ipsum ipsum;
 
-    if (commandLineIterator.has_more()) {
-        while (commandLineIterator.has_more()) {
-            auto x = commandLineIterator.next();
+    while (commandLineIterator.has_more()) {
+        auto x = commandLineIterator.next();
 
-            if (x.is_option("para-count")
-                || x.is_option("sentence-count")
-                || x.is_option("word-count")) {
+        if (x.is_option("para-count")
+            || x.is_option("sentence-count")
+            || x.is_option("word-count")) {
 
-                if (!x.has_arg()) {
-                    fmt::println(stderr, "Expected number for: {}", x.optname());
-                    return EXIT_FAILURE;
-                }
-
-                std::error_code ec;
-                auto n = pfs::to_integer<unsigned int>(x.arg().begin(), x.arg().end(), ec);
-
-                if (ec) {
-                    fmt::println(stderr, "Bad number value for: {}", x.optname());
-                    return EXIT_FAILURE;
-                }
-
-                if (x.is_option("para-count"))
-                    ipsum.set_paragraph_count(n);
-                else if (x.is_option("sentence-count"))
-                    ipsum.set_sentence_count(n);
-                else if (x.is_option("word-count"))
-                    ipsum.set_word_count(n);
-            } else if (x.is_option("orig")) {
-                ipsum.begin_with_orig_paragraph(true);
-            } else {
-                fmt::println(stderr, "Bad argument. Try --help option.");
+            if (!x.has_arg()) {
+                fmt::println(stderr, "Expected number for: {}", x.optname());
                 return EXIT_FAILURE;
             }
+
+            std::error_code ec;
+            auto n = pfs::to_integer<unsigned int>(x.arg().begin(), x.arg().end(), ec);
+
+            if (ec) {
+                fmt::println(stderr, "Bad number value for: {}", x.optname());
+                return EXIT_FAILURE;
+            }
+
+            if (x.is_option("para-count"))
+                ipsum.set_paragraph_count(n);
+            else if (x.is_option("sentence-count"))
+                ipsum.set_sentence_count(n);
+            else if (x.is_option("word-count"))
+                ipsum.set_word_count(n);
+        } else if (x.is_option("orig")) {
+            ipsum.begin_with_orig_paragraph(true);
+        } else {
+            fmt::println(stderr, "Bad argument. Try --help option.");
+            return EXIT_FAILURE;
         }
     }
 
