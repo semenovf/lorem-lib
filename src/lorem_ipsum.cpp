@@ -6,10 +6,10 @@
 // Changelog:
 //      2023.04.19 Initial version.
 ////////////////////////////////////////////////////////////////////////////////
-#include "pfs/lorem/lorem_ipsum.hpp"
-#include "pfs/lorem/utils.hpp"
-#include "pfs/assert.hpp"
-#include "pfs/fmt.hpp"
+#include "lorem/lorem_ipsum.hpp"
+#include "lorem/utils.hpp"
+#include <pfs/assert.hpp>
+#include <pfs/fmt.hpp>
 #include <array>
 #include <string>
 #include <system_error>
@@ -17,7 +17,7 @@
 // Inspired by https://github.com/fzaninotto/Faker (original project) and
 //             https://github.com/FakerPHP/Faker
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 static const std::string __orig_para[3] = {
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod"
@@ -184,4 +184,4 @@ void lorem_ipsum::print (FILE * out) const
     }
 }
 
-} // namespace lorem
+LOREM__NAMESPACE_END

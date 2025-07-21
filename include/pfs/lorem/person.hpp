@@ -8,11 +8,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "exports.hpp"
+#include "namespace.hpp"
 #include "lang_domain.hpp"
 #include <memory>
 #include <string>
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 enum class gender
 {
@@ -69,4 +70,4 @@ public:
     LOREM__EXPORT std::string format (int index, std::string const & fm) const;
 };
 
-} // namespace lorem
+LOREM__NAMESPACE_END

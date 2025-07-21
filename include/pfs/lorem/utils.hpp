@@ -8,9 +8,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "exports.hpp"
+#include "namespace.hpp"
 #include <string>
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 /**
  * Returns random integer in range [@a from, @a to].
@@ -46,4 +47,4 @@ LOREM__EXPORT std::string greek_letter ();
  */
 LOREM__EXPORT std::string capitalize (std::string const & word);
 
-} // namespace lorem
+LOREM__NAMESPACE_END

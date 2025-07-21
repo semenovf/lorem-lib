@@ -6,15 +6,15 @@
 // Changelog:
 //      2023.04.19 Initial version.
 ////////////////////////////////////////////////////////////////////////////////
-#include "pfs/lorem/utils.hpp"
-#include "pfs/unicode/char.hpp"
-#include "pfs/unicode/utf8_iterator.hpp"
+#include "lorem/utils.hpp"
+#include <pfs/unicode/char.hpp>
+#include <pfs/unicode/utf8_iterator.hpp>
 #include <algorithm>
 #include <random>
 #include <system_error>
 #include <utility>
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 using random_engine_t = std::mt19937;
 
@@ -106,4 +106,4 @@ std::string capitalize (std::string const & word)
     return result;
 }
 
-} // namespace lorem
+LOREM__NAMESPACE_END

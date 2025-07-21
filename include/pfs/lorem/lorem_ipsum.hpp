@@ -8,11 +8,12 @@
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "exports.hpp"
+#include "namespace.hpp"
 #include <cstdio>
 #include <string>
 #include <vector>
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 using sentence_t = std::string;
 using paragraph_t = std::vector<sentence_t>;
@@ -66,12 +67,12 @@ public:
     /**
      * Returns generated paragraphs.
      */
-    std::vector<paragraph_t> operator () () const;
+    LOREM__EXPORT std::vector<paragraph_t> operator () () const;
 
     /**
      * Print paragraphs into specified stream.
      */
-    void print (FILE * out = stdout) const;
+    LOREM__EXPORT void print (FILE * out = stdout) const;
 };
 
-} // namespace lorem
+LOREM__NAMESPACE_END

@@ -6,11 +6,11 @@
 // Changelog:
 //      2023.04.20 Initial version.
 ////////////////////////////////////////////////////////////////////////////////
-#include "pfs/lorem/person.hpp"
+#include "lorem/person.hpp"
 #include "person_impl.hpp"
 #include <stdexcept>
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 extern "C" lorem::person::impl const * person_en_US (lorem::gender g);
 extern "C" lorem::person::impl const * person_ru_RU (lorem::gender g);
@@ -96,5 +96,4 @@ std::string person::format (int index, std::string const & fm) const
     return result;
 }
 
-} // namespace lorem
-
+LOREM__NAMESPACE_END

@@ -7,12 +7,12 @@
 //      2023.04.20 Initial version.
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "pfs/lorem/person.hpp"
-#include "pfs/lorem/utils.hpp"
+#include "lorem/person.hpp"
+#include "lorem/utils.hpp"
 #include <memory>
 #include <string>
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 class person::impl
 {
@@ -24,4 +24,4 @@ public:
     virtual std::string full_name () const { return ""; }
 };
 
-} // namespace lorem
+LOREM__NAMESPACE_END

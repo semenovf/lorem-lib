@@ -22,24 +22,17 @@ endif()
 
 add_library(pfs::lorem ALIAS lorem)
 
-if (NOT TARGET pfs::common)
-    set(FETCHCONTENT_UPDATES_DISCONNECTED_COMMON ON)
-
-    include(FetchContent)
-    FetchContent_Declare(common
-        GIT_REPOSITORY https://github.com/semenovf/common-lib.git
-        GIT_TAG master
-        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/2ndparty/common
-        SUBBUILD_DIR ${CMAKE_CURRENT_BINARY_DIR}/2ndparty/common)
-    FetchContent_MakeAvailable(common)
-endif()
-
 target_sources(lorem PRIVATE
+    ${CMAKE_CURRENT_LIST_DIR}/src/file.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/lang_domain.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/lorem_ipsum.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/person.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/utils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/lang_domains/en_US/person.cpp
     ${CMAKE_CURRENT_LIST_DIR}/src/lang_domains/ru_RU/person.cpp)
-target_include_directories(lorem PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
-target_link_libraries(lorem PUBLIC pfs::common)
+
+target_include_directories(lorem
+    PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include
+    PRIVATE ${CMAKE_CURRENT_LIST_DIR}/include/pfs)
+
+target_link_libraries(lorem PUBLIC pfs::common PRIVATE pfs::ionik)

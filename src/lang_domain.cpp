@@ -6,10 +6,10 @@
 // Changelog:
 //      2023.04.20 Initial version.
 ////////////////////////////////////////////////////////////////////////////////
-#include "pfs/lorem/lang_domain.hpp"
+#include "lorem/lang_domain.hpp"
 #include <map>
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 pfs::optional<lang_domain> lang_domain_from_string (std::string const & s)
 {
@@ -22,4 +22,4 @@ pfs::optional<lang_domain> lang_domain_from_string (std::string const & s)
     return pos == __mapping.end() ? pfs::nullopt : pfs::make_optional(pos->second);
 }
 
-} // namespace lorem
+LOREM__NAMESPACE_END

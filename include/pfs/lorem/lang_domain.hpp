@@ -7,10 +7,11 @@
 //      2023.04.20 Initial version.
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "pfs/optional.hpp"
+#include "namespace.hpp"
+#include <pfs/optional.hpp>
 #include <string>
 
-namespace lorem {
+LOREM__NAMESPACE_BEGIN
 
 enum class lang_domain
 {
@@ -20,4 +21,4 @@ enum class lang_domain
 
 pfs::optional<lang_domain> lang_domain_from_string (std::string const & s);
 
-} // namespace lorem
+LOREM__NAMESPACE_END
