@@ -106,4 +106,23 @@ std::string capitalize (std::string const & word)
     return result;
 }
 
+std::string random_binary_data (std::size_t size)
+{
+    std::string result;
+    result.reserve(size);
+
+    char buffer [4096];
+
+    for (std::size_t i = 0; i < size;) {
+        std::size_t j = 0;
+
+        for (; j < sizeof(buffer) && i < size; j++, i++)
+            buffer[j] = static_cast<char>(integer(-127, 128));
+
+        result.append(buffer, j);
+    }
+
+    return result;
+}
+
 LOREM__NAMESPACE_END

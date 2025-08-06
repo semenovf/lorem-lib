@@ -47,4 +47,9 @@ LOREM__EXPORT std::string greek_letter ();
  */
 LOREM__EXPORT std::string capitalize (std::string const & word);
 
+/**
+ * Generates random binary text with specified @a size.
+ */
+LOREM__EXPORT std::string random_binary_data (std::size_t size);
+
 LOREM__NAMESPACE_END
