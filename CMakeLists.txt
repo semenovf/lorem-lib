@@ -11,10 +11,10 @@
 #                  Removed `portable_target` dependency.
 ################################################################################
 cmake_minimum_required (VERSION 3.19)
-project(lorem-ALL LANGUAGES CXX C)
 
 option(LOREM__BUILD_STRICT "Build with strict policies: C++ standard required, C++ extension is OFF etc" ON)
 option(LOREM__BUILD_DEMO "Build examples/demo" OFF)
+option(LOREM__BUILD_STATIC "Force build static library" OFF)
 
 if (LOREM__BUILD_STRICT)
     if (NOT CMAKE_CXX_STANDARD)
@@ -37,8 +37,7 @@ if (NOT _library_output_directory)
 endif()
 
 add_subdirectory(2ndparty)
-
-include(${CMAKE_CURRENT_LIST_DIR}/library.cmake)
+add_subdirectory(src)
 
 if (LOREM__BUILD_DEMO)
     add_subdirectory(demo)
