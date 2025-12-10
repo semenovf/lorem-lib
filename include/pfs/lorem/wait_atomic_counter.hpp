@@ -7,7 +7,6 @@
 //      2025.12.02 Initial version.
 ////////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "exports.hpp"
 #include "namespace.hpp"
 #include <atomic>
 #include <chrono>
@@ -27,6 +26,12 @@ public:
         : _limit(limit)
         , _time_limit(time_limit)
     {}
+
+    ~wait_atomic_counter () = default;
+    wait_atomic_counter (wait_atomic_counter const &) = delete;
+    wait_atomic_counter (wait_atomic_counter &&) = delete;
+    wait_atomic_counter & operator = (wait_atomic_counter const &) = delete;
+    wait_atomic_counter & operator = (wait_atomic_counter &&) = delete;
 
 public:
     // Avoid return value
