@@ -28,6 +28,7 @@ target_sources(lorem PRIVATE
     lorem_ipsum.cpp
     person.cpp
     utils.cpp
+    wait_atomic_bool.cpp
     wait_atomic_counter.cpp
     lang_domains/en_US/person.cpp
     lang_domains/ru_RU/person.cpp)

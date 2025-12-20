@@ -27,10 +27,13 @@ class wait_bitmatrix
 private:
     pfs::synchronized<bitmatrix_type> _m;
     std::chrono::milliseconds _time_limit {5000};
+    std::chrono::milliseconds _time_quantum {10};
 
 public:
-    wait_bitmatrix (std::chrono::milliseconds time_limit = std::chrono::milliseconds{5000})
+    wait_bitmatrix (std::chrono::milliseconds time_limit = std::chrono::milliseconds{5000}
+        , std::chrono::milliseconds time_quantum = std::chrono::milliseconds{10})
         : _time_limit(time_limit)
+        , _time_quantum(time_quantum)
     {}
 
     ~wait_bitmatrix () = default;
@@ -46,9 +49,9 @@ public:
      *
      *  @throws std::out_of_range if @a row or @a col or both does not correspond to a valid cell.
      */
-    wait_bitmatrix & set (std::size_t row, std::size_t col)
+    wait_bitmatrix & set (std::size_t row, std::size_t col, bool value = true)
     {
-        _m.wlock()->set(row, col, true);
+        _m.wlock()->set(row, col, value);
         return *this;
     }
 
@@ -63,7 +66,7 @@ public:
         std::size_t count = Rows * Cols;
 
         while (_m.rlock()->count() < count && timer.remain_count() > 0)
-            std::this_thread::sleep_for(std::chrono::milliseconds{10});
+            std::this_thread::sleep_for(_time_quantum);
 
         return _m.rlock()->count() == count;
     }
