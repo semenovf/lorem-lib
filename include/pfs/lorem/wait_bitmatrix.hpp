@@ -60,7 +60,12 @@ public:
         return _m.unsafe();
     }
 
-    bool operator () ()
+    bool operator () () const
+    {
+        return wait_complete();
+    }
+
+    bool wait_complete () const
     {
         pfs::countdown_timer<std::milli> timer {_time_limit};
         std::size_t count = Rows * Cols;
@@ -69,6 +74,26 @@ public:
             std::this_thread::sleep_for(_time_quantum);
 
         return _m.rlock()->count() == count;
+    }
+
+    bool wait_eq (wait_bitmatrix const & other) const
+    {
+        pfs::countdown_timer<std::milli> timer {_time_limit};
+
+        while (*this != other && timer.remain_count() > 0)
+            std::this_thread::sleep_for(_time_quantum);
+
+        return *this == other;
+    }
+
+    bool operator == (wait_bitmatrix const & other) const
+    {
+        return _m.rlock()->operator == (*other._m.rlock());
+    }
+
+    bool operator != (wait_bitmatrix const & other) const
+    {
+        return _m.rlock()->operator != (*other._m.rlock());
     }
 };
 
