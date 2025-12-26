@@ -60,7 +60,7 @@ public:
         return _m.unsafe();
     }
 
-    bool operator () () const
+    bool wait () const
     {
         return wait_complete();
     }

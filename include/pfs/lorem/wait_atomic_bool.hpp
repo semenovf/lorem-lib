@@ -45,7 +45,7 @@ public:
         _flag.store(false);
     }
 
-    LOREM__EXPORT bool operator () ();
+    LOREM__EXPORT bool wait ();
 };
 
 LOREM__NAMESPACE_END

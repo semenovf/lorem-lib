@@ -49,7 +49,12 @@ public:
         _counter++;
     }
 
-    LOREM__EXPORT bool operator () ();
+    UIntT value () const
+    {
+        return _counter.load();
+    }
+
+    LOREM__EXPORT bool wait ();
 };
 
 using wait_atomic_counter8  = wait_atomic_counter<std::uint8_t>;

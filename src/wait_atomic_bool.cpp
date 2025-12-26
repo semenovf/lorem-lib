@@ -12,7 +12,7 @@
 
 LOREM__NAMESPACE_BEGIN
 
-bool wait_atomic_bool::operator () ()
+bool wait_atomic_bool::wait ()
 {
     pfs::countdown_timer<std::milli> timer {_time_limit};
 

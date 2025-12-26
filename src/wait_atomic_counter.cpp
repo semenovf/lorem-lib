@@ -13,7 +13,7 @@
 LOREM__NAMESPACE_BEGIN
 
 template <typename UIntT>
-bool wait_atomic_counter<UIntT>::operator () ()
+bool wait_atomic_counter<UIntT>::wait ()
 {
     pfs::countdown_timer<std::milli> timer {_time_limit};
 
