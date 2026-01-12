@@ -13,6 +13,7 @@
 #include <pfs/synchronized.hpp>
 #include <chrono>
 #include <cstdint>
+#include <thread>
 
 LOREM__NAMESPACE_BEGIN
 
