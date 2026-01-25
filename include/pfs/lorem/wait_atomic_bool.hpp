@@ -45,6 +45,11 @@ public:
         _flag.store(false);
     }
 
+    bool value () const
+    {
+        return _flag.load();
+    }
+
     LOREM__EXPORT bool wait ();
 };
 
