@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2023-2024 Vladislav Trifochkin
+# Copyright (c) 2023-2026 Vladislav Trifochkin
 #
 # This file is part of `lorem-lib`.
 #
@@ -9,8 +9,10 @@
 #                  Added LOREM__ENABLE_PROFILER option.
 #       2024.11.23 Up to C++14 standard.
 #                  Removed `portable_target` dependency.
+#       2026.07.15 Removed setting CMAKE_*_OUTPUT_DIRECTORY.
 ################################################################################
 cmake_minimum_required (VERSION 3.19)
+project(lorem-ALL LANGUAGES C CXX)
 
 option(LOREM__BUILD_STRICT "Build with strict policies: C++ standard required, C++ extension is OFF etc" ON)
 option(LOREM__BUILD_DEMO "Build examples/demo" OFF)
@@ -23,17 +25,6 @@ if (LOREM__BUILD_STRICT)
 
     set(CXX_STANDARD_REQUIRED ON)
     set(CMAKE_CXX_EXTENSIONS OFF) # use -std=c++XX rather than -std=gnu++XX
-endif()
-
-get_property(_runtime_output_directory GLOBAL PROPERTY RUNTIME_OUTPUT_DIRECTORY)
-get_property(_library_output_directory GLOBAL PROPERTY LIBRARY_OUTPUT_DIRECTORY)
-
-if (NOT _runtime_output_directory)
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
-endif()
-
-if (NOT _library_output_directory)
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/output)
 endif()
 
 add_subdirectory(2ndparty)

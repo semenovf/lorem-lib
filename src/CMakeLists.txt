@@ -10,8 +10,6 @@
 ################################################################################
 project(lorem LANGUAGES C CXX)
 
-option(LOREM__BUILD_SHARED "Enable build shared library" OFF)
-
 if (BUILD_SHARED_LIBS AND NOT LOREM__BUILD_STATIC)
     add_library(lorem)
     target_compile_definitions(lorem PUBLIC LOREM__EXPORTS)
@@ -23,6 +21,7 @@ endif()
 add_library(pfs::lorem ALIAS lorem)
 
 target_sources(lorem PRIVATE
+    compare_files.cpp
     file.cpp
     lang_domain.cpp
     lorem_ipsum.cpp

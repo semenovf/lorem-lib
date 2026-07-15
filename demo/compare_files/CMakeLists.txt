@@ -1,12 +1,11 @@
 ################################################################################
-# Copyright (c) 2023-2025 Vladislav Trifochkin
+# Copyright (c) 2026 Vladislav Trifochkin
 #
 # This file is part of `lorem-lib`.
 #
 # Changelog:
-#      2023.04.19 Initial version.
-#      2025.08.21 Added file demo.
+#      2026.07.15 Initial version.
 ################################################################################
-add_subdirectory(lorem_ipsum)
-add_subdirectory(file)
-add_subdirectory(compare_files)
+project(compare_files)
+add_executable(${PROJECT_NAME} main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE pfs::lorem)
