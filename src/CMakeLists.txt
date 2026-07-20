@@ -1,5 +1,5 @@
 ################################################################################
-# Copyright (c) 2023-2025 Vladislav Trifochkin
+# Copyright (c) 2023-2026 Vladislav Trifochkin
 #
 # This file is part of `lorem-lib`.
 #
@@ -7,6 +7,7 @@
 #       2023.04.19 Initial version (library.cmake).
 #       2024.11.23 Removed `portable_target` dependency.
 #       2025.12.02 Moved from root directory and renamed from library.cmake.
+#       2026.07.20 Set POSITION_INDEPENDENT_CODE.
 ################################################################################
 project(lorem LANGUAGES C CXX)
 
@@ -16,6 +17,7 @@ if (BUILD_SHARED_LIBS AND NOT LOREM__BUILD_STATIC)
 else()
     add_library(lorem STATIC)
     target_compile_definitions(lorem PUBLIC LOREM__STATIC)
+    set_property(TARGET lorem PROPERTY POSITION_INDEPENDENT_CODE ON)
 endif()
 
 add_library(pfs::lorem ALIAS lorem)
